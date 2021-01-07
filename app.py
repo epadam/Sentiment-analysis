@@ -8,6 +8,10 @@ Models = st.sidebar.selectbox(
     'Choose the model',
     ('RNN', 'LSTM','Bert'))
 
+st.sidebar.text('')
+
+st.sidebar.markdown('[More resources and tools](https://github.com/epadam/machine-learning-overview/blob/master/NLP.md)')
+
 
 import re
 import joblib
@@ -58,7 +62,7 @@ if logicregression.predict(X_test[20050]) == 0:
 else:
     prediction = 'Positive'
 
-target = [1 if i < 12500 else 0 for i in range(25050)]
+target = [1 if i < 12500 else 0 for i in range(25000)]
 
 st.text(prediction)
 
