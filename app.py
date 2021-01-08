@@ -23,7 +23,7 @@ st.sidebar.markdown('[More resources and tools](https://github.com/epadam/machin
 
 
 
-
+@st.cache
 def read_file():
     reviews_train = []
     for line in open('aclImdb/movie_data/full_train.txt', 'r'):
