@@ -59,10 +59,8 @@ logicregression = joblib.load('final_model.pkl')
 
 ram = randint(0,25000)
 
-st.subheader('Movie comment')
 
-
-st.text_area("", value=reviews_test[ram], height=350)
+comment = st.text_area("Type your own comments here", value=reviews_test[ram], height=350)
 
 
 st.subheader('prediction')
@@ -76,7 +74,7 @@ target = [1 if i < 12500 else 0 for i in range(25000)]
 
 st.text(prediction)
 
-st.subheader('label')
+st.subheader('True label')
 
 st.text(target[ram])
 
