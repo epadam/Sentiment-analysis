@@ -52,7 +52,7 @@ def read_file():
     return X, X_test, reviews_test
 
 
-read_file()
+X, X_test, reviews_test = read_file()
 
 
 logicregression = joblib.load('final_model.pkl')
