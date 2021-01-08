@@ -1,16 +1,16 @@
 import urllib.request
 import os
 import tarfile
-import tensorflow as tf
-from tensorflow import keras
+# import tensorflow as tf
+# from tensorflow import keras
 import numpy as np
-from keras import models
+# from keras import models
 import gzip
 # import keras
 # from keras import datasets
-from keras.datasets import imdb
-from keras.preprocessing import sequence
-from keras.preprocessing.text import Tokenizer
+# from keras.datasets import imdb
+# from keras.preprocessing import sequence
+# from keras.preprocessing.text import Tokenizer
 import re
 
 

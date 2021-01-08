@@ -1,63 +1,73 @@
 import streamlit as st
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.metrics import accuracy_score
+import numpy as np
+
+from numpy.random import randint 
+
+import re
+import joblib
+
 
 title = st.title('Sentiment Analysis from IMDB dataset')
 
 header= st.header('Example of the test set')
 
+
 Models = st.sidebar.selectbox(
-    'Choose the model',
-    ('RNN', 'LSTM','Bert'))
-
+    'Choose the model',    ('Linear Regression', 'LSTM','Bert'))
 st.sidebar.text('')
-
 st.sidebar.markdown('[More resources and tools](https://github.com/epadam/machine-learning-overview/blob/master/NLP.md)')
 
 
-import re
-import joblib
 
-reviews_train = []
-for line in open('aclImdb/movie_data/full_train.txt', 'r'):
-    reviews_train.append(line.strip())
+
+def read_file():
+    reviews_train = []
+    for line in open('aclImdb/movie_data/full_train.txt', 'r'):
+        reviews_train.append(line.strip())  
     
-reviews_test = []
-for line in open('aclImdb/movie_data/full_test.txt', 'r'):
-    reviews_test.append(line.strip())
-
-REPLACE_NO_SPACE = re.compile("[.;:!\'?,\"()\[\]]")
-REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
-
-def preprocess_reviews(reviews):
-    reviews = [REPLACE_NO_SPACE.sub("", line.lower()) for line in reviews]
-    reviews = [REPLACE_WITH_SPACE.sub(" ", line) for line in reviews]
+    reviews_test = []
+    for line in open('aclImdb/movie_data/full_test.txt', 'r'):
+        reviews_test.append(line.strip())
+        
+    REPLACE_NO_SPACE = re.compile("[.;:!\'?,\"()\[\]]")
+    REPLACE_WITH_SPACE = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
     
-    return reviews
+    def preprocess_reviews(reviews):
+        reviews = [REPLACE_NO_SPACE.sub("", line.lower()) for line in reviews]
+        reviews = [REPLACE_WITH_SPACE.sub(" ", line) for line in reviews]
+        return reviews
+        
+    reviews_train_clean = preprocess_reviews(reviews_train)
+    reviews_test_clean = preprocess_reviews(reviews_test)
+    
+    cv = CountVectorizer(binary=True)
+    cv.fit(reviews_train_clean)
+    X = cv.transform(reviews_train_clean)
+    X_test = cv.transform(reviews_test_clean)
 
-reviews_train_clean = preprocess_reviews(reviews_train)
-reviews_test_clean = preprocess_reviews(reviews_test)
+    return X, X_test, reviews_test
 
 
-from sklearn.feature_extraction.text import CountVectorizer
-
-cv = CountVectorizer(binary=True)
-cv.fit(reviews_train_clean)
-X = cv.transform(reviews_train_clean)
-X_test = cv.transform(reviews_test_clean)
-
+read_file()
 
 
 logicregression = joblib.load('final_model.pkl')
-#for i in range(10):
+
+ram = randint(0,25000)
 
 st.subheader('Movie comment')
 
 
-st.text_area("", value=reviews_test[20050], height=350)
+st.text_area("", value=reviews_test[ram], height=350)
 
 
 st.subheader('prediction')
 
-if logicregression.predict(X_test[20050]) == 0:
+if logicregression.predict(X_test[ram]) == 0:
     prediction = 'Negative'
 else:
     prediction = 'Positive'
@@ -68,12 +78,12 @@ st.text(prediction)
 
 st.subheader('label')
 
-st.text(target[20050])
+st.text(target[ram])
 
 st.subheader('Accuracy')
 
 
-from sklearn.metrics import accuracy_score
+
 
 
 accuracy = accuracy_score(target, logicregression.predict(X_test))
